@@ -1,0 +1,17 @@
+#spring:
+#  security:
+#    user:
+#      name: admin
+#      password: ${a5f71197-2134-4d3e-8923-540c7d3e52b5}
+#  application:
+#    name: quiz-app-backend
+#  datasource:
+#    password: root
+#    url: jdbc:mysql://localhost:3306/QuizApplication?useSSL=false
+#    username: root
+#  jpa:
+#    hibernate:
+#      ddl-auto: create
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.MySQLDialect
