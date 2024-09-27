@@ -8,4 +8,7 @@ import java.util.Map;
 @Setter
 public class AnswerCheckRequest {
     private Map<Integer,String> selectedOption;
+
+
+
 }
