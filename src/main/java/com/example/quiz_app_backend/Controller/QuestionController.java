@@ -27,7 +27,7 @@ public class QuestionController {
         return ResponseEntity.ok(questionsConfig);
     }
     @PostMapping("/addQuestions")
-    public ResponseEntity<Response> addQuestion(@RequestBody QuestionCreateDto questionCreateDto) {
+    public ResponseEntity<Response> addQuestion(@ModelAttribute QuestionCreateDto questionCreateDto) {
 
         questionService.createQuestion(questionCreateDto);
         Response response = new Response();
@@ -37,7 +37,7 @@ public class QuestionController {
     }
 
     @PutMapping("/updateQuestion")
-    public ResponseEntity<Response> updateQuestionById(@RequestHeader Integer id, @RequestBody QuestionUpdateDto questionUpdateDto) {
+    public ResponseEntity<Response> updateQuestionById(@RequestHeader Integer id, @ModelAttribute QuestionUpdateDto questionUpdateDto) {
         questionService.updateQuestion(id,questionUpdateDto);
         Response response=new Response();
         response.setMessage("question update successfully");
@@ -53,11 +53,7 @@ public class QuestionController {
         return ResponseEntity.ok(response);
     }
 
-//    @GetMapping("getAllQuestions")
-//    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions() {
-//        List<QuestionResponseDto> questions = questionService.getAllQues();
-//        return new ResponseEntity<>(questions, HttpStatus.OK);
-//    }
+
 
 
     @GetMapping("getAllQuestionsForUser")
@@ -116,6 +112,13 @@ public class QuestionController {
 //        UserDetails response=questionService.findUserById(id).orElseThrow(()->new ResourceNotFoundException("not found "+id));
 //
 //        return new ResponseEntity<>(response,HttpStatus.OK);
+//    }
+
+
+// @GetMapping("getAllQuestions")
+//    public ResponseEntity<List<QuestionResponseDto>> getAllQuestions() {
+//        List<QuestionResponseDto> questions = questionService.getAllQues();
+//        return new ResponseEntity<>(questions, HttpStatus.OK);
 //    }
 
 

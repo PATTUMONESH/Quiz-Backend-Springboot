@@ -11,6 +11,13 @@ import com.example.quiz_app_backend.Repository.SubjectRepository;
 import com.example.quiz_app_backend.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,33 +33,146 @@ public class QuestionImpl implements QuestionService {
     @Autowired
     private QuestionListRepository questionListRepository;
 
+    private static final String IMAGE_UPLOAD_DIR="D:/screenshots/";
+
+//    @Override
+//    public QuestionsConfig createQuestion(QuestionCreateDto questionCreateDto) {
+//        Subject subjectId = subjectRepository.findById(questionCreateDto.getSubjectId()).orElseThrow(() -> new ResourceNotFoundException("subject not found with this id"));
+//        QuestionsConfig questionsConfig = new QuestionsConfig();
+//
+//
+////        if("image".equalsIgnoreCase(questionCreateDto.getQuestionType()) && questionCreateDto.getImage()!=null){
+////            String imageName=saveImageToFileSystem(questionCreateDto.getImage());
+////            questionsConfig.setQuestion(imageName);
+////            questionsConfig.setQuestionType(questionCreateDto.getQuestionType());
+////
+////        }else{
+////            questionsConfig.setQuestion(questionCreateDto.getQuestion());
+////        }
+//        questionsConfig.setSubject(subjectId);
+//        //questionsConfig.setQuestion(questionCreateDto.getQuestion());
+//        questionsConfig.setAnswer(questionCreateDto.getAnswer());
+//        questionsConfig.setOption1(questionCreateDto.getOption1());
+//        questionsConfig.setOption2(questionCreateDto.getOption2());
+//        questionsConfig.setOption3(questionCreateDto.getOption3());
+//        questionsConfig.setOption4(questionCreateDto.getOption4());
+//
+//
+//        if (questionCreateDto.getQuestion().endsWith(".jpg") ||
+//                questionCreateDto.getQuestion().endsWith(".png") ||
+//                questionCreateDto.getQuestion().endsWith(".jpeg")) {
+//            questionsConfig.setQuestionType("image");
+//        } else {
+//            questionsConfig.setQuestionType("text");
+//        }
+//        return questionListRepository.save(questionsConfig);
+//    }
+//
+//    private String saveImageToFileSystem(MultipartFile imageFile){
+//
+//       try{
+//           String originalFileName=imageFile.getOriginalFilename();
+//           Path filePath= Paths.get(IMAGE_UPLOAD_DIR,originalFileName);
+//           Files.copy(imageFile.getInputStream(),filePath, StandardCopyOption.REPLACE_EXISTING);
+//           return originalFileName;
+//       } catch (IOException e) {
+//           throw new RuntimeException("Error savin image"+e);
+//       }
+//
+//
+//    }
+//
+//
+//
+//    @Override
+//    public QuestionsConfig updateQuestion(Integer id,QuestionUpdateDto questionUpdateDto) {
+//        QuestionsConfig questionsConfig = questionListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Question not found for this id :: " + id));
+//
+//        if("image".equalsIgnoreCase(questionUpdateDto.getQuestionType()) && questionUpdateDto.getImage()!=null){
+//            String imageName=saveImageToFileSystem(questionUpdateDto.getImage());
+//            questionsConfig.setQuestionType(imageName);
+//        }else {
+//            questionsConfig.setQuestionType(questionUpdateDto.getQuestion());
+//        }
+//
+//
+//
+//        //Subject subject = subjectRepository.findById(questionsConfig.getSubject().getId()).orElseThrow(() -> new ResourceNotFoundException("subject not found with this id"));
+//
+//
+//
+//        //questionsConfig.setQuestion(questionUpdateDto.getQuestion());
+//
+//
+//
+//
+//        questionsConfig.setOption1(questionUpdateDto.getOption1());
+//        questionsConfig.setOption2(questionUpdateDto.getOption2());
+//        questionsConfig.setOption3(questionUpdateDto.getOption3());
+//        questionsConfig.setOption4(questionUpdateDto.getOption4());
+//        questionsConfig.setAnswer(questionUpdateDto.getAnswer());
+////        questionsConfig.setSubject(subject);
+////        final QuestionsConfig updatedQuestion = questionListRepository.save(questionsConfig);
+////        return questionsConfig;
+//        return questionListRepository.save(questionsConfig);
+//    }
+
+
+
+
     @Override
     public QuestionsConfig createQuestion(QuestionCreateDto questionCreateDto) {
-        Subject subjectId = subjectRepository.findById(questionCreateDto.getSubjectId()).orElseThrow(() -> new ResourceNotFoundException("subject not found with this id"));
+        Subject subject = subjectRepository.findById(questionCreateDto.getSubjectId())
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with this id"));
         QuestionsConfig questionsConfig = new QuestionsConfig();
-        questionsConfig.setQuestion(questionCreateDto.getQuestion());
-        questionsConfig.setAnswer(questionCreateDto.getAnswer());
+        questionsConfig.setSubject(subject);
+        if ("image".equalsIgnoreCase(questionCreateDto.getQuestionType()) && questionCreateDto.getImage() != null) {
+            // Handle image file upload
+            String imageName = saveImageToFileSystem(questionCreateDto.getImage());
+            questionsConfig.setQuestion(imageName);  // Save image name in the question field
+        } else {
+            questionsConfig.setQuestion(questionCreateDto.getQuestion());  // Save text
+        }
+        // Set the rest of the fields
         questionsConfig.setOption1(questionCreateDto.getOption1());
         questionsConfig.setOption2(questionCreateDto.getOption2());
         questionsConfig.setOption3(questionCreateDto.getOption3());
         questionsConfig.setOption4(questionCreateDto.getOption4());
-        questionsConfig.setSubject(subjectId);
+        questionsConfig.setAnswer(questionCreateDto.getAnswer());
+        questionsConfig.setQuestionType(questionCreateDto.getQuestionType());
         return questionListRepository.save(questionsConfig);
     }
 
+    private String saveImageToFileSystem(MultipartFile imageFile) {
+        try {
+            String originalFilename = imageFile.getOriginalFilename();
+            Path filePath = Paths.get(IMAGE_UPLOAD_DIR, originalFilename);
+            Files.copy(imageFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            return originalFilename;  // Save the image name to the database
+        } catch (IOException e) {
+            throw new RuntimeException("Error saving image", e);
+        }
+    }
+
+    // Similar logic for updating questions with image or text
     @Override
-    public QuestionsConfig updateQuestion(Integer id,QuestionUpdateDto questionUpdateDto) {
-        QuestionsConfig questionsConfig = questionListRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Question not found for this id :: " + id));
-        Subject subject = subjectRepository.findById(questionsConfig.getSubject().getId()).orElseThrow(() -> new ResourceNotFoundException("subject not found with this id"));
-        questionsConfig.setQuestion(questionUpdateDto.getQuestion());
+    public QuestionsConfig updateQuestion(Integer id, QuestionUpdateDto questionUpdateDto) {
+        QuestionsConfig questionsConfig = questionListRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found for this id"));
+
+        if ("image".equalsIgnoreCase(questionUpdateDto.getQuestionType()) && questionUpdateDto.getImage() != null) {
+            String imageName = saveImageToFileSystem(questionUpdateDto.getImage());
+            questionsConfig.setQuestion(imageName);
+        } else {
+            questionsConfig.setQuestion(questionUpdateDto.getQuestion());
+        }
         questionsConfig.setOption1(questionUpdateDto.getOption1());
         questionsConfig.setOption2(questionUpdateDto.getOption2());
         questionsConfig.setOption3(questionUpdateDto.getOption3());
         questionsConfig.setOption4(questionUpdateDto.getOption4());
         questionsConfig.setAnswer(questionUpdateDto.getAnswer());
-        questionsConfig.setSubject(subject);
-        final QuestionsConfig updatedQuestion = questionListRepository.save(questionsConfig);
-        return questionsConfig;
+
+        return questionListRepository.save(questionsConfig);
     }
 
     @Override
@@ -83,7 +203,6 @@ public class QuestionImpl implements QuestionService {
             System.out.println(que.toString());
         }
 
-
         Collections.shuffle(questions);
 System.out.println("=================================");
         for(QuestionsConfig que:questions){
@@ -107,6 +226,13 @@ System.out.println("=================================");
 
                     Collections.shuffle(options);
 
+                    String questionText;
+                    if("image".equalsIgnoreCase(question.getQuestionType())){
+                        questionText="Image: "+question.getQuestion();
+                    }else{
+                        questionText=question.getQuestion();
+                    }
+
                     System.out.println("=================5===============");
                     for(String op:options){
                         System.out.println(op);
@@ -115,7 +241,8 @@ System.out.println("=================================");
 
                     return new QuestionResponseDto(
                             question.getQuesid(),
-                            question.getQuestion(),
+                            questionText,
+                            //question.getQuestion(),
                             options.get(0),
                             options.get(1),
                             options.get(2),
@@ -150,8 +277,6 @@ System.out.println("=================================");
                 .collect(Collectors.toList());
 
     }
-
-
 
 }
 
