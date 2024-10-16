@@ -69,7 +69,9 @@ public class UserImpl implements UserService {
 
     @Override
     public UserDetails saveUser(UserDetailsDto userDetailsDto) {
-        Role role=roleRepository.findById(userDetailsDto.getRoleId()).orElseThrow(()->new ResourceNotFoundException("role not found with this id"));
+        Role role=roleRepository.findById(userDetailsDto.getRoleId()).orElseThrow(()->new
+
+                ResourceNotFoundException("role not found with this id"));
         UserDetails userDetails=new UserDetails();
         userDetails.setFirstName(userDetailsDto.getFirstName());
         userDetails.setLastName(userDetailsDto.getLastName());
@@ -112,16 +114,18 @@ public class UserImpl implements UserService {
         return userScoreRepository.save(userScore);
     }
 
+
+
     @Override
     public UserDetails findByUserId(Long userId) {
         return userRepository.findById(userId).orElseThrow(()->new ResourceNotFoundException("user is not found with this id:"+userId));
     }
 
-    @Override
-    public List<Role> getAllUserRoles() {
-        List<Role> role=roleRepository.findAll();
-        return role;
-    }
+//    @Override
+//    public List<Role> getAllUserRoles() {
+//        List<Role> role=roleRepository.findAll();
+//        return role;
+//    }
 
 
 

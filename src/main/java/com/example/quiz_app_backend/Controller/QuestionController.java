@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +29,41 @@ public class QuestionController {
         QuestionsConfig questionsConfig = questionService.getQuestionByQid(questionId).orElseThrow(() -> new ResourceNotFoundException("Question does not exists with this id"));
         return ResponseEntity.ok(questionsConfig);
     }
-    @PostMapping("/addQuestions")
-    public ResponseEntity<Response> addQuestion(@ModelAttribute QuestionCreateDto questionCreateDto) {
 
+
+
+    @PostMapping("/addQuestions")
+    public ResponseEntity<Response> addQuestion(@RequestBody QuestionCreateDto questionCreateDto) {
         questionService.createQuestion(questionCreateDto);
         Response response = new Response();
         response.setMessage("Questions added successfully");
         response.setStatus(HttpStatus.CREATED.value());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+
+    @PostMapping("/uploadImage")
+    public ResponseEntity<ImageResponse> imageUpload(@RequestParam("image") MultipartFile image){
+        try {
+            ImageResponse imageResponse = questionService.imageUpload(image);
+            return new ResponseEntity<>(imageResponse,HttpStatus.OK);
+        }catch (IOException e){
+
+            ImageResponse errorResponse=new ImageResponse(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+
+            return new ResponseEntity<>(errorResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
+@GetMapping("/getImage")
+  public  ResponseEntity<byte[]> getImage(@RequestParam String imageName) throws IOException {
+        byte[] imageData= questionService.getImage(imageName);
+        return new ResponseEntity<>(imageData,HttpStatus.OK);
+    }
+
+
 
     @PutMapping("/updateQuestion")
     public ResponseEntity<Response> updateQuestionById(@RequestHeader Integer id, @ModelAttribute QuestionUpdateDto questionUpdateDto) {
@@ -52,7 +81,6 @@ public class QuestionController {
         response.put("deleted", Boolean.TRUE);
         return ResponseEntity.ok(response);
     }
-
 
 
 

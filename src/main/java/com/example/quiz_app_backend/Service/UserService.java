@@ -1,12 +1,10 @@
 package com.example.quiz_app_backend.Service;
 
 import com.example.quiz_app_backend.Dto.UserDetailsDto;
-import com.example.quiz_app_backend.Entity.Role;
+
 import com.example.quiz_app_backend.Entity.UserDetails;
 import com.example.quiz_app_backend.Entity.UserScore;
 
-import java.util.List;
-import java.util.Optional;
 
 
 public interface UserService {
@@ -27,7 +25,7 @@ public interface UserService {
    UserDetails findByUserId(Long userId);
 
 
-   List<Role> getAllUserRoles();
+  // List<Role> getAllUserRoles();
 
     UserDetails saveUser(UserDetailsDto userDetailsDto);
 }

@@ -18,6 +18,13 @@ public class QuestionResponseDto {
     private String option4;
     private String answer;
     private Long subjectId;
+    private Long questionType;
+    private Long option1Type;
+    private Long option2Type;
+    private Long option3Type;
+    private Long option4Type;
+    private Long answerType;
+
 
 
 }

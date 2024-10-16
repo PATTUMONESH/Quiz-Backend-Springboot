@@ -3,6 +3,7 @@ package com.example.quiz_app_backend.Controller;
 import com.example.quiz_app_backend.Dto.MailStructure;
 import com.example.quiz_app_backend.Dto.Response;
 import com.example.quiz_app_backend.Dto.UserDetailsDto;
+import com.example.quiz_app_backend.Dto.UserLoginDto;
 import com.example.quiz_app_backend.Entity.*;
 import com.example.quiz_app_backend.Exception.BadLoginCredentials;
 import com.example.quiz_app_backend.Exception.UserAlreadyExistsException;
@@ -46,9 +47,9 @@ public class UserController {
     }
 
     @PostMapping("/Login")
-    public UserDetails loginUser(@RequestBody UserDetails userDetails) {
-        String tempEmail = userDetails.getEmail();
-        String tempPassword = userDetails.getPassword();
+    public ResponseEntity<UserDetails> loginUser(@RequestBody UserLoginDto userLoginDto) {
+        String tempEmail = userLoginDto.getEmail();
+        String tempPassword = userLoginDto.getPassword();
         UserDetails userObject = null;
         if (tempEmail != null && tempPassword != null) {
             userObject = userService.fetchUserByEmailAndPassword(tempEmail, tempPassword);
@@ -56,14 +57,17 @@ public class UserController {
         if (userObject == null) {
             throw new BadLoginCredentials("bad credentials");
         }
-        return userObject;
+        Response response=new Response();
+
+
+        return new ResponseEntity<>(userObject,HttpStatus.OK);
     }
 
-    @GetMapping("/userRoles")
-    public ResponseEntity<List<Role>> getAllUserRoles(){
-        List<Role> userList=userService.getAllUserRoles();
-        return new ResponseEntity<>(userList,HttpStatus.OK);
-    }
+//    @GetMapping("/userRoles")
+//    public ResponseEntity<List<Role>> getAllUserRoles(){
+//        List<Role> userList=userService.getAllUserRoles();
+//        return new ResponseEntity<>(userList,HttpStatus.OK);
+//    }
 
 
 
