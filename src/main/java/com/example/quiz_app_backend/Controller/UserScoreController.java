@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -49,6 +52,35 @@ public class UserScoreController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/getAllUserScores")
+    public ResponseEntity<List<UserScore>> getAllUserScores(){
+        List<UserScore> userScores=userScoreService.getAllUserScores();
+        return new ResponseEntity<>(userScores,HttpStatus.OK);
+    }
+
+
+    @PostMapping("/searchUser")
+    public UserScore searchByName(@RequestHeader String name){
+        return userScoreService.searchUser(name);
+
+    }
+
+
+
+
+
+    @DeleteMapping("/deleteUserScore")
+    public ResponseEntity<Map<String,Boolean>> deleteUserScore(@RequestHeader Long id){
+        userScoreService.deleteUserScoreById(id);
+        Map<String,Boolean> response=new HashMap<>();
+        response.put("deleted",Boolean.TRUE);
+        return ResponseEntity.ok(response);
+    }
+
+
+
+
 }
 
 

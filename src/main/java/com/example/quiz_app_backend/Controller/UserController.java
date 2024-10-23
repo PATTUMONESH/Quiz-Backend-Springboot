@@ -57,11 +57,10 @@ public class UserController {
         if (userObject == null) {
             throw new BadLoginCredentials("bad credentials");
         }
-        Response response=new Response();
-
-
-        return new ResponseEntity<>(userObject,HttpStatus.OK);
+        Response response = new Response();
+        return new ResponseEntity<>(userObject, HttpStatus.OK);
     }
+}
 
 //    @GetMapping("/userRoles")
 //    public ResponseEntity<List<Role>> getAllUserRoles(){
@@ -74,12 +73,6 @@ public class UserController {
 
 
 
-
-
-
-
-
-}
 
 
 

@@ -64,6 +64,16 @@
                                 <th>Total Questions</th>
                                 <td>${totalQuestions}</td>
                             </tr>
+                           <tr>
+                           <th>Attempted questions</th>
+                           <td>${AttemptedQuestions}</td>
+                           </tr>
+
+                              <tr>
+                                <th>Unattempted Questions</th>
+                                <td>${unAttemptedQuestion}</td>
+                            </tr>
+
                             <tr>
                                 <th>Correct Answers</th>
                                 <td>${correctAnswer}</td>
@@ -72,10 +82,7 @@
                                 <th>Wrong Answers</th>
                                 <td>${wrongAnswer}</td>
                             </tr>
-                            <tr>
-                                <th>Unattempted Questions</th>
-                                <td>${unAttemptedQuestion}</td>
-                            </tr>
+
                             <tr>
                                 <th>Your Score</th>
                                 <td>${score}</td>

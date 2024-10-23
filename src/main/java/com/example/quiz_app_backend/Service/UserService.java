@@ -22,6 +22,8 @@ public interface UserService {
 
 
 
+
+
    UserDetails findByUserId(Long userId);
 
 

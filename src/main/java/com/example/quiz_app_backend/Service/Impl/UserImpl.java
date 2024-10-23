@@ -93,7 +93,8 @@ public class UserImpl implements UserService {
     }
 
     @Override
-    public UserDetails fetchUserByEmailAndPassword(String email, String password) {
+    public UserDetails
+    fetchUserByEmailAndPassword(String email, String password) {
         return userRepository.findByEmailAndPassword(email, password);
     }
 
@@ -110,6 +111,7 @@ public class UserImpl implements UserService {
                 .orElseThrow(() -> new RuntimeException("User not found ::" + userId));
         userScore.setFirstName(userDetails.getFirstName());
         userScore.setLastName(userDetails.getLastName());
+
         userScore.setUserDetails(userDetails);
         return userScoreRepository.save(userScore);
     }

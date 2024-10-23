@@ -2,6 +2,7 @@ package com.example.quiz_app_backend.Service.Impl;
 
 import com.example.quiz_app_backend.Dto.AnswerCheckRequest;
 import com.example.quiz_app_backend.Dto.AnswerCheckResponse;
+import com.example.quiz_app_backend.Dto.UserScoreDto;
 import com.example.quiz_app_backend.Entity.QuestionsConfig;
 import com.example.quiz_app_backend.Entity.Subject;
 import com.example.quiz_app_backend.Entity.UserDetails;
@@ -140,6 +141,24 @@ public class UserScoreImpl implements UserScoreService {
         helper.setText(emailContent, true);
 
         mailSender.send(message);
+    }
+
+    @Override
+    public List<UserScore> getAllUserScores() {
+        return userScoreRepository.findAll();
+    }
+
+    @Override
+    public void deleteUserScoreById(Long id) {
+        UserScore deleteScore=userScoreRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("user score is not found with this provided id"+id));
+        userScoreRepository.delete(deleteScore);
+
+    }
+
+    @Override
+    public UserScore searchUser(String name) {
+
+        return userScoreRepository.searchByName(name);
     }
 
 

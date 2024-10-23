@@ -4,13 +4,11 @@ import com.example.quiz_app_backend.Dto.ImageResponse;
 import com.example.quiz_app_backend.Dto.QuestionCreateDto;
 import com.example.quiz_app_backend.Dto.QuestionResponseDto;
 import com.example.quiz_app_backend.Dto.QuestionUpdateDto;
-
 import com.example.quiz_app_backend.Entity.QuestionsConfig;
 import com.example.quiz_app_backend.Entity.Subject;
 import com.example.quiz_app_backend.Entity.TypeDefinition;
 import com.example.quiz_app_backend.Exception.ResourceNotFoundException;
 import com.example.quiz_app_backend.Repository.QuestionListRepository;
-
 import com.example.quiz_app_backend.Repository.SubjectRepository;
 import com.example.quiz_app_backend.Repository.TypeDefinitionRepository;
 import com.example.quiz_app_backend.Service.QuestionService;
@@ -19,13 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -38,28 +34,21 @@ public class QuestionImpl implements QuestionService {
     @Autowired
     private TypeDefinitionRepository typeDefinitionRepository;
 
-
-
     @Autowired
     private QuestionListRepository questionListRepository;
 
     private static final String IMAGE_UPLOAD_DIR="D:/screenshots/";
 
-//
-
-
-
 
     @Override
-    public QuestionsConfig
-    createQuestion(QuestionCreateDto questionCreateDto) {
+    public QuestionsConfig createQuestion(QuestionCreateDto questionCreateDto) {
         Subject subject = subjectRepository.findById(questionCreateDto.getSubjectId()).orElseThrow(() -> new ResourceNotFoundException("Subject not found with this id"));
         TypeDefinition questionType=typeDefinitionRepository.findById(questionCreateDto.getQuestionType()).orElseThrow(()->new ResourceNotFoundException("question type id not found"));
         TypeDefinition option1Type=typeDefinitionRepository.findById(questionCreateDto.getOption1Type()).orElseThrow(()->new ResourceNotFoundException("option1 type id not found"));
         TypeDefinition option2Type=typeDefinitionRepository.findById(questionCreateDto.getOption2Type()).orElseThrow(()->new ResourceNotFoundException("option2 type id not found"));
         TypeDefinition option3Type=typeDefinitionRepository.findById(questionCreateDto.getOption3Type()).orElseThrow(()->new ResourceNotFoundException("option3 type id not found"));
         TypeDefinition option4Type=typeDefinitionRepository.findById(questionCreateDto.getOption4Type()).orElseThrow(()->new ResourceNotFoundException("option4 type id not found"));
-       TypeDefinition answerType=typeDefinitionRepository.findById(questionCreateDto.getAnswerType()).orElseThrow(()->new ResourceNotFoundException("answer type id not found"));
+        TypeDefinition answerType=typeDefinitionRepository.findById(questionCreateDto.getAnswerType()).orElseThrow(()->new ResourceNotFoundException("answer type id not found"));
 
         QuestionsConfig questionsConfig = new QuestionsConfig();
         questionsConfig.setSubject(subject);
@@ -78,6 +67,53 @@ public class QuestionImpl implements QuestionService {
         questionsConfig.setAnswer(questionCreateDto.getAnswer());
         return questionListRepository.save(questionsConfig);
     }
+
+    // Similar logic for updating questions with image or text
+    @Override
+    public QuestionsConfig updateQuestion(Integer id, QuestionUpdateDto questionUpdateDto) {
+        QuestionsConfig questionsConfig = questionListRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Question not found for this id"));
+        // Fetch related entities from the repositories based on DTO ids
+        Subject subject = subjectRepository.findById(questionUpdateDto.getSubjectId())
+                .orElseThrow(() -> new ResourceNotFoundException("Subject not found with this id"));
+
+        TypeDefinition questionType = typeDefinitionRepository.findById(questionUpdateDto.getQuestionType())
+                .orElseThrow(() -> new ResourceNotFoundException("Question type not found"));
+
+        TypeDefinition option1Type = typeDefinitionRepository.findById(questionUpdateDto.getOption1Type())
+                .orElseThrow(() -> new ResourceNotFoundException("Option1 type not found"));
+
+        TypeDefinition option2Type = typeDefinitionRepository.findById(questionUpdateDto.getOption2Type())
+                .orElseThrow(() -> new ResourceNotFoundException("Option2 type not found"));
+
+        TypeDefinition option3Type = typeDefinitionRepository.findById(questionUpdateDto.getOption3Type())
+                .orElseThrow(() -> new ResourceNotFoundException("Option3 type not found"));
+
+        TypeDefinition option4Type = typeDefinitionRepository.findById(questionUpdateDto.getOption4Type())
+                .orElseThrow(() -> new ResourceNotFoundException("Option4 type not found"));
+
+        TypeDefinition answerType = typeDefinitionRepository.findById(questionUpdateDto.getAnswerType())
+                .orElseThrow(() -> new ResourceNotFoundException("Answer type not found"));
+
+        // Update the fields in the existing question entity
+        questionsConfig.setSubject(subject);
+        questionsConfig.setQuestionType(questionType);
+        questionsConfig.setOption1Type(option1Type);
+        questionsConfig.setOption2Type(option2Type);
+        questionsConfig.setOption3Type(option3Type);
+        questionsConfig.setOption4Type(option4Type);
+        questionsConfig.setAnswerType(answerType);
+        questionsConfig.setQuestion(questionUpdateDto.getQuestion());
+        questionsConfig.setOption1(questionUpdateDto.getOption1());
+        questionsConfig.setOption2(questionUpdateDto.getOption2());
+        questionsConfig.setOption3(questionUpdateDto.getOption3());
+        questionsConfig.setOption4(questionUpdateDto.getOption4());
+        questionsConfig.setAnswer(questionUpdateDto.getAnswer());
+
+        return questionListRepository.save(questionsConfig);
+    }
+
+
 
     @Override
     public ImageResponse imageUpload(MultipartFile image) throws IOException {
@@ -108,43 +144,6 @@ public class QuestionImpl implements QuestionService {
     }
 
 
-//        if ("image".equalsIgnoreCase(questionCreateDto.getQuestionType()) && questionCreateDto.getImage() != null) {
-//            // Handle image file upload
-//            String imageName = saveImageToFileSystem(questionCreateDto.getImage());
-//            questionsConfig.setQuestion(imageName);  // Save image name in the question field
-//        } else {
-//            questionsConfig.setQuestion(questionCreateDto.getQuestion());  // Save text
-//        }
-        // Set the rest of the fields
-
-//        questionsConfig.setQuestionType(questionCreateDto.getQuestionType());
-
-
-//
-
-    // Similar logic for updating questions with image or text
-    @Override
-    public QuestionsConfig updateQuestion(Integer id, QuestionUpdateDto questionUpdateDto) {
-        QuestionsConfig questionsConfig = questionListRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Question not found for this id"));
-
-//        if ("image".equalsIgnoreCase(questionUpdateDto.getQuestionType()) && questionUpdateDto.getImage() != null) {
-//            String imageName = saveImageToFileSystem(questionUpdateDto.getImage());
-//            questionsConfig.setQuestion(imageName);
-//        } else {
-//            questionsConfig.setQuestion(questionUpdateDto.getQuestion());
-//        }
-        questionsConfig.setOption1(questionUpdateDto.getOption1());
-        questionsConfig.setOption2(questionUpdateDto.getOption2());
-        questionsConfig.setOption3(questionUpdateDto.getOption3());
-        questionsConfig.setOption4(questionUpdateDto.getOption4());
-        questionsConfig.setAnswer(questionUpdateDto.getAnswer());
-
-        return questionListRepository.save(questionsConfig);
-    }
-
-
-
     @Override
     public Optional<QuestionsConfig> getQuestionByQid(Integer Id) {
         return questionListRepository.findById(Id);
@@ -161,20 +160,15 @@ public class QuestionImpl implements QuestionService {
         questionListRepository.delete(deletedQues);
     }
 
-
-
-
     @Override
     public List<QuestionResponseDto> getAllQuesForUser() {
 
         List<QuestionsConfig> questions = questionListRepository.findRandomQuestions();
-
         for(QuestionsConfig que:questions){
             System.out.println(que.toString());
         }
-
         Collections.shuffle(questions);
-System.out.println("=================================");
+          System.out.println("=================================");
         for(QuestionsConfig que:questions){
             System.out.println(que.toString());
         }
@@ -187,7 +181,6 @@ System.out.println("=================================");
                             question.getOption2(),
                             question.getOption3(),
                             question.getOption4()
-
                     ));
 
                     System.out.println("=================================");
@@ -208,7 +201,6 @@ System.out.println("=================================");
                     for(String op:options){
                         System.out.println(op);
                     }
-
 
                     return new QuestionResponseDto(
                             question.getQuesid(),
@@ -233,6 +225,7 @@ System.out.println("=================================");
     @Override
     public List<QuestionResponseDto> getAllQuesForAdmin(){
         List<QuestionsConfig> obj=questionListRepository.findAll();
+
         for(QuestionsConfig ob:obj){
             System.out.println(ob);
         }
@@ -258,6 +251,8 @@ System.out.println("=================================");
     }
 
 }
+
+
 
 
 //    @Override
@@ -522,3 +517,19 @@ System.out.println("=================================");
 //        return questionListRepository.save(questionsConfig);
 //    }
 
+
+
+
+//        if ("image".equalsIgnoreCase(questionCreateDto.getQuestionType()) && questionCreateDto.getImage() != null) {
+//            // Handle image file upload
+//            String imageName = saveImageToFileSystem(questionCreateDto.getImage());
+//            questionsConfig.setQuestion(imageName);  // Save image name in the question field
+//        } else {
+//            questionsConfig.setQuestion(questionCreateDto.getQuestion());  // Save text
+//        }
+// Set the rest of the fields
+
+//        questionsConfig.setQuestionType(questionCreateDto.getQuestionType());
+
+
+//

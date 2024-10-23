@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @AllArgsConstructor
 public class QuestionUpdateDto {
-    //private Integer quesid;
+
     private String question;
     private String option1;
     private String option2;
@@ -19,7 +19,17 @@ public class QuestionUpdateDto {
     private String option4;
     private String answer;
     private Long subjectId;
-    private String questionType;
-    private MultipartFile image;
+    private Long questionType;
+    private Long option1Type;
+    private Long option2Type;
+    private Long option3Type;
+    private Long option4Type;
+    private Long answerType;
+
+
 }
+
+
+//private Integer quesid;
 //  private String answer;
+//    private MultipartFile image;

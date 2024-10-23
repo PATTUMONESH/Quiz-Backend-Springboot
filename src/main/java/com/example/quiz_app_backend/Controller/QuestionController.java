@@ -66,7 +66,7 @@ public class QuestionController {
 
 
     @PutMapping("/updateQuestion")
-    public ResponseEntity<Response> updateQuestionById(@RequestHeader Integer id, @ModelAttribute QuestionUpdateDto questionUpdateDto) {
+    public ResponseEntity<Response> updateQuestionById(@RequestHeader Integer id, @RequestBody QuestionUpdateDto questionUpdateDto) {
         questionService.updateQuestion(id,questionUpdateDto);
         Response response=new Response();
         response.setMessage("question update successfully");
@@ -89,6 +89,7 @@ public class QuestionController {
         List<QuestionResponseDto> questions = questionService.getAllQuesForUser();
         return new ResponseEntity<>(questions, HttpStatus.OK);
     }
+
 
     @GetMapping("getAllQuestionsForAdmin")
     public ResponseEntity<List<QuestionResponseDto>> getAllQuestionsForAdmin(){

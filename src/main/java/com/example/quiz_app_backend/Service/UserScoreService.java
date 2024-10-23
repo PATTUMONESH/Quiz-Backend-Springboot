@@ -8,11 +8,18 @@ import freemarker.template.TemplateException;
 import jakarta.mail.MessagingException;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public interface UserScoreService {
     AnswerCheckResponse checkingAnswers(Long userId, AnswerCheckRequest requestData, Long subjectId) throws MessagingException, TemplateException, IOException;
     void sendQuizResultsEmail(UserDetails userDetails, UserScore userScore) throws MessagingException, IOException, TemplateException;
+    List<UserScore> getAllUserScores();
+
+    void deleteUserScoreById(Long id);
+
+
+    UserScore searchUser(String name);
 }
 
 
