@@ -3,6 +3,8 @@ package com.example.quiz_app_backend.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -14,7 +16,6 @@ public class UserScore {
     @SequenceGenerator(name = "user_score_seq", sequenceName = "user_score_sequence", initialValue = 101, allocationSize = 1)
     private long id;
     private String firstName;
-    
     private String lastName;
     private int score;
     private int correct;
@@ -22,6 +23,7 @@ public class UserScore {
     private int notVisited;
     private int total;
     private int visitedQues;
+    private LocalDateTime scoreTimeStamp;
 
 
     @ManyToOne

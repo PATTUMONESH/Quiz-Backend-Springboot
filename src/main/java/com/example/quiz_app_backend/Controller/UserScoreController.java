@@ -60,14 +60,14 @@ public class UserScoreController {
     }
 
 
-    @PostMapping("/searchUser")
-    public UserScore searchByName(@RequestHeader String name){
-        return userScoreService.searchUser(name);
 
+    @GetMapping("/search")
+    public List<UserScore> searchUserScores(@RequestHeader String name) {
+if(name.length()<3){
+    throw new IllegalArgumentException("search term at least 3 letter");
+}
+return userScoreService.findByFirstNameOrLastName(name);
     }
-
-
-
 
 
     @DeleteMapping("/deleteUserScore")

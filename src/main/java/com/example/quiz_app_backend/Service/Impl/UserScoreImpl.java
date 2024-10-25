@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,6 +60,7 @@ public class UserScoreImpl implements UserScoreService {
         userScore.setCorrect(0);
         userScore.setInCorrect(0);
         userScore.setNotVisited(0);
+        userScore.setScoreTimeStamp(LocalDateTime.now());
 //        userScore.setTotal(0);
         userScore.setTotal(selectedRandomQues.size());
         userScore.setVisitedQues(0);
@@ -145,7 +147,9 @@ public class UserScoreImpl implements UserScoreService {
 
     @Override
     public List<UserScore> getAllUserScores() {
-        return userScoreRepository.findAll();
+
+        return userScoreRepository.findAllScoresByDesc();
+//        return userScoreRepository.findAll();
     }
 
     @Override
@@ -156,10 +160,15 @@ public class UserScoreImpl implements UserScoreService {
     }
 
     @Override
-    public UserScore searchUser(String name) {
-
-        return userScoreRepository.searchByName(name);
+    public List<UserScore> findByFirstNameOrLastName(String name) {
+        return userScoreRepository.findByFirstNameOrLastName(name);
     }
+
+//    @Override
+//    public UserScore searchUser(String name) {
+//
+//        return userScoreRepository.searchByName(name);
+//    }
 
 
 }

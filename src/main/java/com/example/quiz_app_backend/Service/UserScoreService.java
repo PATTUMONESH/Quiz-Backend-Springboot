@@ -18,8 +18,9 @@ public interface UserScoreService {
 
     void deleteUserScoreById(Long id);
 
+    List<UserScore> findByFirstNameOrLastName(String name);
 
-    UserScore searchUser(String name);
+//    UserScore searchUser(String name);
 }
 
 

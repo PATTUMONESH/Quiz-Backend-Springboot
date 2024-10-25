@@ -1,22 +1,16 @@
 package com.example.quiz_app_backend.Controller;
 
-import com.example.quiz_app_backend.Dto.MailStructure;
 import com.example.quiz_app_backend.Dto.Response;
 import com.example.quiz_app_backend.Dto.UserDetailsDto;
 import com.example.quiz_app_backend.Dto.UserLoginDto;
 import com.example.quiz_app_backend.Entity.*;
 import com.example.quiz_app_backend.Exception.BadLoginCredentials;
 import com.example.quiz_app_backend.Exception.UserAlreadyExistsException;
-//import com.example.quiz_app_backend.Service.EmailService;
-//import com.example.quiz_app_backend.Service.Impl.EmailImpl;
-import com.example.quiz_app_backend.Service.QuestionService;
 import com.example.quiz_app_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 
 @RestController
@@ -26,8 +20,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-
 
     @PostMapping("/RegisterUsers")
     public ResponseEntity<Response> registerUser(@RequestBody UserDetailsDto userDetailsDto) {
@@ -40,11 +32,14 @@ public class UserController {
         }
         userService.saveUser(userDetailsDto);
         Response response = new Response();
-        response.setMessage("user created successful");
+        response.setMessage("Register successfully");
         response.setStatus(HttpStatus.CREATED.value());
-//      System.out.println(response.getStatus());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+
+
+
 
     @PostMapping("/Login")
     public ResponseEntity<UserDetails> loginUser(@RequestBody UserLoginDto userLoginDto) {
@@ -55,12 +50,37 @@ public class UserController {
             userObject = userService.fetchUserByEmailAndPassword(tempEmail, tempPassword);
         }
         if (userObject == null) {
-            throw new BadLoginCredentials("bad credentials");
+            throw new BadLoginCredentials("invalid credentials");
         }
         Response response = new Response();
         return new ResponseEntity<>(userObject, HttpStatus.OK);
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 //    @GetMapping("/userRoles")
 //    public ResponseEntity<List<Role>> getAllUserRoles(){
