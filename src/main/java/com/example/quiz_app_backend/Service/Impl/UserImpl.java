@@ -99,6 +99,11 @@ public class UserImpl implements UserService {
     }
 
     @Override
+    public Optional<UserDetails> findAdminById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public String getUserEmailById(Long userId) {
         UserDetails userDetails = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found ::" + userId));
@@ -115,8 +120,6 @@ public class UserImpl implements UserService {
         userScore.setUserDetails(userDetails);
         return userScoreRepository.save(userScore);
     }
-
-
 
     @Override
     public UserDetails findByUserId(Long userId) {

@@ -5,6 +5,7 @@ import com.example.quiz_app_backend.Dto.UserDetailsDto;
 import com.example.quiz_app_backend.Dto.UserLoginDto;
 import com.example.quiz_app_backend.Entity.*;
 import com.example.quiz_app_backend.Exception.BadLoginCredentials;
+import com.example.quiz_app_backend.Exception.ResourceNotFoundException;
 import com.example.quiz_app_backend.Exception.UserAlreadyExistsException;
 import com.example.quiz_app_backend.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,9 @@ public class UserController {
 
 
 
+
+
+
     @PostMapping("/Login")
     public ResponseEntity<UserDetails> loginUser(@RequestBody UserLoginDto userLoginDto) {
         String tempEmail = userLoginDto.getEmail();
@@ -55,6 +59,20 @@ public class UserController {
         Response response = new Response();
         return new ResponseEntity<>(userObject, HttpStatus.OK);
     }
+
+
+    @GetMapping("/adminById")
+    public ResponseEntity<UserDetails> adminDetailsById(@RequestParam Long id){
+
+        UserDetails response=userService.findAdminById(id).orElseThrow(()->new ResourceNotFoundException("admin not found with this id: "+id));
+        return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+
+
+
+
 }
 
 

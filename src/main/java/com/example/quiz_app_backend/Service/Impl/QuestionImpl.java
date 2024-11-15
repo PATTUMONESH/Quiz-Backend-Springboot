@@ -7,10 +7,12 @@ import com.example.quiz_app_backend.Dto.QuestionUpdateDto;
 import com.example.quiz_app_backend.Entity.QuestionsConfig;
 import com.example.quiz_app_backend.Entity.Subject;
 import com.example.quiz_app_backend.Entity.TypeDefinition;
+import com.example.quiz_app_backend.Entity.UserDetails;
 import com.example.quiz_app_backend.Exception.ResourceNotFoundException;
 import com.example.quiz_app_backend.Repository.QuestionListRepository;
 import com.example.quiz_app_backend.Repository.SubjectRepository;
 import com.example.quiz_app_backend.Repository.TypeDefinitionRepository;
+import com.example.quiz_app_backend.Repository.UserRepository;
 import com.example.quiz_app_backend.Service.QuestionService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ import java.util.stream.Collectors;
 public class QuestionImpl implements QuestionService {
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private SubjectRepository subjectRepository;
 
     @Autowired
@@ -38,6 +43,14 @@ public class QuestionImpl implements QuestionService {
     private QuestionListRepository questionListRepository;
 
     private static final String IMAGE_UPLOAD_DIR="D:/screenshots/";
+
+
+
+    @Override
+    public Optional<UserDetails> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
 
 
     @Override
@@ -128,7 +141,7 @@ public class QuestionImpl implements QuestionService {
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setStatus(true);
         imageResponse.setCode(HttpStatus.OK.value());
-        imageResponse.setMessage("image Name");
+        imageResponse.setMessage("File Upload Successfully");
         imageResponse.setImageName(fileName);
         return imageResponse;
     }
@@ -408,10 +421,7 @@ public class QuestionImpl implements QuestionService {
 
 
 
-//    @Override
-//    public Optional<UserDetails> findUserById(Long id) {
-//        return userRepository.findById(id);
-//    }
+
 
 
 

@@ -2,6 +2,7 @@ package com.example.quiz_app_backend.Controller;
 
 import com.example.quiz_app_backend.Dto.*;
 import com.example.quiz_app_backend.Entity.QuestionsConfig;
+import com.example.quiz_app_backend.Entity.UserDetails;
 import com.example.quiz_app_backend.Exception.ResourceNotFoundException;
 import com.example.quiz_app_backend.Service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,22 +43,43 @@ public class QuestionController {
     }
 
 
+
+
+
+//    @PostMapping("/uploadImage")
+//    public ResponseEntity<ImageResponse> imageUpload(@RequestParam("image") MultipartFile image){
+//        try {
+//            ImageResponse imageResponse = questionService.imageUpload(image);
+//            return new ResponseEntity<>(imageResponse,HttpStatus.OK);
+//        }catch (IOException e){
+//
+//            ImageResponse errorResponse=new ImageResponse(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
+//
+//            return new ResponseEntity<>(errorResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+//        }
+//    }
+
+
+
     @PostMapping("/uploadImage")
-    public ResponseEntity<ImageResponse> imageUpload(@RequestParam("image") MultipartFile image){
-        try {
-            ImageResponse imageResponse = questionService.imageUpload(image);
-            return new ResponseEntity<>(imageResponse,HttpStatus.OK);
-        }catch (IOException e){
-
-            ImageResponse errorResponse=new ImageResponse(false,HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage(),null);
-
-            return new ResponseEntity<>(errorResponse,HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ImageResponse> imageUpload(@RequestParam("image") MultipartFile image) {
+        // Check if the image file is empty
+        if (image == null || image.isEmpty()) {
+            ImageResponse errorResponse = new ImageResponse(false, HttpStatus.BAD_REQUEST.value(), "Please select the file", null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
         }
 
+        try {
+            ImageResponse imageResponse = questionService.imageUpload(image);
+            return new ResponseEntity<>(imageResponse, HttpStatus.OK);
+        } catch (IOException e) {
+            ImageResponse errorResponse = new ImageResponse(false, HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), null);
+            return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 
-@GetMapping("/getImage")
+    @GetMapping("/getImage")
   public  ResponseEntity<byte[]> getImage(@RequestParam String imageName) throws IOException {
         byte[] imageData= questionService.getImage(imageName);
         return new ResponseEntity<>(imageData,HttpStatus.OK);
@@ -73,6 +95,16 @@ public class QuestionController {
         response.setStatus(HttpStatus.OK.value());
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
+
+
+    @GetMapping ("/user")
+    public ResponseEntity<UserDetails> findUserById(@RequestHeader Long id){
+   UserDetails response=questionService.findUserById(id).orElseThrow(()->new ResourceNotFoundException("user not found with this id: "+id));
+   return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+
 
     @DeleteMapping("/deleteQuestion")
     public ResponseEntity<Map<String, Boolean>> deleteQuestion(@RequestHeader Integer id) {
@@ -135,13 +167,9 @@ public class QuestionController {
 
 
 
-//    @GetMapping ("/user")
-//    public ResponseEntity<UserDetails> findUserById(@RequestHeader Long id){
-//
-//        UserDetails response=questionService.findUserById(id).orElseThrow(()->new ResourceNotFoundException("not found "+id));
-//
-//        return new ResponseEntity<>(response,HttpStatus.OK);
-//    }
+
+
+
 
 
 // @GetMapping("getAllQuestions")

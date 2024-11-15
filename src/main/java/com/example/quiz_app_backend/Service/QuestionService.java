@@ -5,6 +5,7 @@ import com.example.quiz_app_backend.Dto.QuestionCreateDto;
 import com.example.quiz_app_backend.Dto.QuestionResponseDto;
 import com.example.quiz_app_backend.Dto.QuestionUpdateDto;
 import com.example.quiz_app_backend.Entity.QuestionsConfig;
+import com.example.quiz_app_backend.Entity.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -32,6 +33,8 @@ public interface QuestionService {
 
     List<QuestionResponseDto> getAllQuesForAdmin();
 
+    Optional<UserDetails> findUserById(Long id);
+
 }
 
 
@@ -47,5 +50,5 @@ public interface QuestionService {
 
 //public AnswerCheckResponse checkingAnswers(Long userId,AnswerCheckRequest requestData,Long subjectId);
 
-//    Optional<UserDetails> findUserById(Long id);
+
 
