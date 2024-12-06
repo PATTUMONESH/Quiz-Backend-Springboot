@@ -16,9 +16,12 @@ import com.example.quiz_app_backend.Repository.UserRepository;
 import com.example.quiz_app_backend.Service.QuestionService;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -157,6 +160,8 @@ public class QuestionImpl implements QuestionService {
     }
 
 
+
+
     @Override
     public Optional<QuestionsConfig> getQuestionByQid(Integer Id) {
         return questionListRepository.findById(Id);
@@ -235,33 +240,67 @@ public class QuestionImpl implements QuestionService {
                 .collect(Collectors.toList());
     }
 
-    @Override
-    public List<QuestionResponseDto> getAllQuesForAdmin(){
-        List<QuestionsConfig> obj=questionListRepository.findAll();
 
-        for(QuestionsConfig ob:obj){
-            System.out.println(ob);
-        }
-        return obj.stream()
-                .map(question -> new QuestionResponseDto(
-                        question.getQuesid(),
-                        question.getQuestion(),
-                        question.getOption1(),
-                        question.getOption2(),
-                        question.getOption3(),
-                        question.getOption4(),
-                        question.getAnswer(),
-                        question.getSubject().getId(),
-                        question.getQuestionType().getTypeId(),
-                        question.getOption1Type().getTypeId(),
-                        question.getOption2Type().getTypeId(),
-                        question.getOption3Type().getTypeId(),
-                        question.getOption4Type().getTypeId(),
-                        question.getAnswerType().getTypeId() // Get the ID of the associated subject
-                ))
-                .collect(Collectors.toList());
 
+//    @Override
+//    public List<QuestionResponseDto> getAllQuesForAdmin(){
+//        List<QuestionsConfig> obj=questionListRepository.findAll();
+//        for(QuestionsConfig ob:obj){
+//            System.out.println(ob);
+//        }
+//        return obj.stream()
+//                .map(question -> new QuestionResponseDto(
+//                        question.getQuesid(),
+//                        question.getQuestion(),
+//                        question.getOption1(),
+//                        question.getOption2(),
+//                        question.getOption3(),
+//                        question.getOption4(),
+//                        question.getAnswer(),
+//                        question.getSubject().getId(),
+//                        question.getQuestionType().getTypeId(),
+//                        question.getOption1Type().getTypeId(),
+//                        question.getOption2Type().getTypeId(),
+//                        question.getOption3Type().getTypeId(),
+//                        question.getOption4Type().getTypeId(),
+//                        question.getAnswerType().getTypeId() // Get the ID of the associated subject
+//                ))
+//                .collect(Collectors.toList());
+//    }
+
+
+
+
+
+    public Page<QuestionResponseDto> getAllQuesForAdmin(Pageable pageable) {
+        Page<QuestionsConfig> questionsPage = questionListRepository.findAll(pageable);
+
+        return questionsPage.map(question -> new QuestionResponseDto(
+                question.getQuesid(),
+                question.getQuestion(),
+                question.getOption1(),
+                question.getOption2(),
+                question.getOption3(),
+                question.getOption4(),
+                question.getAnswer(),
+                question.getSubject().getId(),
+                question.getQuestionType().getTypeId(),
+                question.getOption1Type().getTypeId(),
+                question.getOption2Type().getTypeId(),
+                question.getOption3Type().getTypeId(),
+                question.getOption4Type().getTypeId(),
+                question.getAnswerType().getTypeId()
+        ));
     }
+
+
+
+
+
+
+
+
+
 
 }
 
