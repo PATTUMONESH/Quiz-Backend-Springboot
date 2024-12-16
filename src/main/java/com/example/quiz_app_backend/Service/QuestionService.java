@@ -38,7 +38,9 @@ public interface QuestionService {
 
     Optional<UserDetails> findUserById(Long id);
 
+
     //List<QuestionResponseDto> getAllQuesForAdmin();
+
 
     Page<QuestionResponseDto> getAllQuesForAdmin(Pageable pageable);
 

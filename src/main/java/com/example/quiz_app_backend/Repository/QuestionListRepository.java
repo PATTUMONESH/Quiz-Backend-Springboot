@@ -12,11 +12,10 @@ import java.util.List;
 @Repository
 public interface QuestionListRepository extends JpaRepository<QuestionsConfig,Integer> {
 
-
-    // Fetch 20 random questions from the database
-    @Query(value = "SELECT * FROM questions_config ORDER BY RANDOM() LIMIT 20", nativeQuery = true)
+    @Query(value = "(SELECT * FROM questions_config WHERE subject_id = 1 ORDER BY RANDOM() LIMIT 20) UNION ALL (SELECT * FROM questions_config WHERE subject_id = 2 ORDER BY RANDOM() LIMIT 10)UNION ALL (SELECT * FROM questions_config WHERE subject_id = 3 ORDER BY RANDOM() LIMIT 10)", nativeQuery = true)
     List<QuestionsConfig> findRandomQuestions();
 
+    
     Page<QuestionsConfig> findAll(Pageable pageable);
 
 }

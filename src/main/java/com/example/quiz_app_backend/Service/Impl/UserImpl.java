@@ -70,7 +70,6 @@ public class UserImpl implements UserService {
     @Override
     public UserDetails saveUser(UserDetailsDto userDetailsDto) {
         Role role=roleRepository.findById(userDetailsDto.getRoleId()).orElseThrow(()->new
-
                 ResourceNotFoundException("role not found with this id"));
         UserDetails userDetails=new UserDetails();
         userDetails.setFirstName(userDetailsDto.getFirstName());

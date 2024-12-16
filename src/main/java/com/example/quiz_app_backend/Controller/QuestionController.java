@@ -136,7 +136,7 @@ public class QuestionController {
     @GetMapping("/getAllQuestionsForAdmin")
     public ResponseEntity<Page<QuestionResponseDto>> getAllQuestionsForAdmin(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
+            @RequestParam(defaultValue = "5") int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<QuestionResponseDto> questions = questionService.getAllQuesForAdmin(pageable);
@@ -146,7 +146,7 @@ public class QuestionController {
 
 
 
-    
+
 
 }
 
