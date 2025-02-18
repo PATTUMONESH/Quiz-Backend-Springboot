@@ -175,6 +175,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>quiz-application</finalName>
 	</build>
 
 </project>

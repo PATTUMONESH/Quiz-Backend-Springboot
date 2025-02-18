@@ -15,7 +15,7 @@ public interface QuestionListRepository extends JpaRepository<QuestionsConfig,In
     @Query(value = "(SELECT * FROM questions_config WHERE subject_id = 1 ORDER BY RANDOM() LIMIT 20) UNION ALL (SELECT * FROM questions_config WHERE subject_id = 2 ORDER BY RANDOM() LIMIT 10)UNION ALL (SELECT * FROM questions_config WHERE subject_id = 3 ORDER BY RANDOM() LIMIT 10)", nativeQuery = true)
     List<QuestionsConfig> findRandomQuestions();
 
-    
+
     Page<QuestionsConfig> findAll(Pageable pageable);
 
 }

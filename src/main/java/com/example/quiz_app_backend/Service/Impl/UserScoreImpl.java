@@ -29,6 +29,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class UserScoreImpl implements UserScoreService {
@@ -151,6 +152,19 @@ public class UserScoreImpl implements UserScoreService {
         return userScoreRepository.findAllScoresByDesc();
 //        return userScoreRepository.findAll();
     }
+
+
+//@Override
+//public Map<String, List<UserScore>> getAllUserScoresGroupedBySubject() {
+//    List<UserScore> scores = userScoreRepository.findAllScoresGroupedBySubject();
+//
+//    // Group by subject name using streams
+//    return scores.stream()
+//            .collect(Collectors.groupingBy(score -> score.getSubject().getSubject()));
+//}
+
+
+
 
     @Override
     public void deleteUserScoreById(Long id) {

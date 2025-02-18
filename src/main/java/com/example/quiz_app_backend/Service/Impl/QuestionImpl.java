@@ -178,22 +178,21 @@ public class QuestionImpl implements QuestionService {
         questionListRepository.delete(deletedQues);
     }
 
+
     @Override
     public List<QuestionResponseDto> getAllQuesForUser() {
 
         List<QuestionsConfig> questions = questionListRepository.findRandomQuestions();
-        for(QuestionsConfig que:questions){
-            System.out.println(que.toString());
-        }
-        Collections.shuffle(questions);
-          System.out.println("=================================");
-        for(QuestionsConfig que:questions){
-            System.out.println(que.toString());
-        }
 
-        return questions.stream()
+        // Group questions by subjectId and maintain the order
+        Map<Long,List<QuestionsConfig>> groupedQuestions = questions.stream()
+                .collect(Collectors.groupingBy(que -> que.getSubject().getId(), LinkedHashMap::new, Collectors.toList()));
+
+        List<QuestionsConfig> orderedQuestions = new ArrayList<>();
+        groupedQuestions.values().forEach(orderedQuestions::addAll); // Maintain subject-wise group order
+
+        return orderedQuestions.stream()
                 .map(question -> {
-
                     List<String> options = new ArrayList<>(List.of(
                             question.getOption1(),
                             question.getOption2(),
@@ -201,24 +200,11 @@ public class QuestionImpl implements QuestionService {
                             question.getOption4()
                     ));
 
-                    System.out.println("=================================");
-                    for(String op:options){
-                        System.out.println(op);
-                    }
+                    Collections.shuffle(options); // Shuffle options for each question
 
-                    Collections.shuffle(options);
-
-                    String questionText;
-                    if("image".equalsIgnoreCase(String.valueOf(question.getQuestionType()))){
-                        questionText="Image: "+question.getQuestion();
-                    }else{
-                        questionText=question.getQuestion();
-                    }
-
-                    System.out.println("=================5===============");
-                    for(String op:options){
-                        System.out.println(op);
-                    }
+                    String questionText = "image".equalsIgnoreCase(String.valueOf(question.getQuestionType()))
+                            ? "Image: " + question.getQuestion()
+                            : question.getQuestion();
 
                     return new QuestionResponseDto(
                             question.getQuesid(),
@@ -239,6 +225,76 @@ public class QuestionImpl implements QuestionService {
                 })
                 .collect(Collectors.toList());
     }
+
+
+
+
+
+
+
+
+
+//    @Override
+//    public List<QuestionResponseDto> getAllQuesForUser() {
+//
+//        List<QuestionsConfig> questions = questionListRepository.findRandomQuestions();
+//        for(QuestionsConfig que:questions){
+//            System.out.println(que.toString());
+//        }
+//        Collections.shuffle(questions);
+//          System.out.println("=================================");
+//        for(QuestionsConfig que:questions){
+//            System.out.println(que.toString());
+//        }
+//
+//        return questions.stream()
+//                .map(question -> {
+//
+//                    List<String> options = new ArrayList<>(List.of(
+//                            question.getOption1(),
+//                            question.getOption2(),
+//                            question.getOption3(),
+//                            question.getOption4()
+//                    ));
+//
+//                    System.out.println("=================================");
+//                    for(String op:options){
+//                        System.out.println(op);
+//                    }
+//
+//                    Collections.shuffle(options);
+//
+//                    String questionText;
+//                    if("image".equalsIgnoreCase(String.valueOf(question.getQuestionType()))){
+//                        questionText="Image: "+question.getQuestion();
+//                    }else{
+//                        questionText=question.getQuestion();
+//                    }
+//
+//                    System.out.println("=================5===============");
+//                    for(String op:options){
+//                        System.out.println(op);
+//                    }
+//
+//                    return new QuestionResponseDto(
+//                            question.getQuesid(),
+//                            questionText,
+//                            options.get(0),
+//                            options.get(1),
+//                            options.get(2),
+//                            options.get(3),
+//                            question.getAnswer(),
+//                            question.getSubject().getId(),
+//                            question.getQuestionType().getTypeId(),
+//                            question.getOption1Type().getTypeId(),
+//                            question.getOption2Type().getTypeId(),
+//                            question.getOption3Type().getTypeId(),
+//                            question.getOption4Type().getTypeId(),
+//                            question.getAnswerType().getTypeId()
+//                    );
+//                })
+//                .collect(Collectors.toList());
+//    }
 
 
 

@@ -9,12 +9,16 @@ import jakarta.mail.MessagingException;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 
 public interface UserScoreService {
     AnswerCheckResponse checkingAnswers(Long userId, AnswerCheckRequest requestData, Long subjectId) throws MessagingException, TemplateException, IOException;
     void sendQuizResultsEmail(UserDetails userDetails, UserScore userScore) throws MessagingException, IOException, TemplateException;
     List<UserScore> getAllUserScores();
+
+
+    //Map<String, List<UserScore>> getAllUserScoresGroupedBySubject()
 
     void deleteUserScoreById(Long id);
 

@@ -14,6 +14,17 @@ public interface UserScoreRepository extends JpaRepository<UserScore, Long>, Jpa
 
 @Query(value = "select * from user_score ORDER BY score_time_stamp DESC",nativeQuery = true)
   List<UserScore> findAllScoresByDesc();
+
+
+//  @Query(value = "SELECT * FROM user_score us " +
+//          "ORDER BY us.subject_id, us.score_time_stamp DESC", nativeQuery = true)
+//  List<UserScore> findAllScoresGroupedBySubject();
+
+
+
+
+
+
   @Query(value = "SELECT * FROM user_score WHERE (LOWER(first_name) LIKE LOWER(CONCAT('%', :name, '%')) OR LOWER(last_name) LIKE LOWER(CONCAT('%', :name, '%')))" +
           " OR (LOWER(CONCAT(first_name, ' ', last_name)) LIKE LOWER(CONCAT('%', :name, '%')))", nativeQuery = true)
   List<UserScore> findByFirstNameOrLastName(@Param("name") String name);
